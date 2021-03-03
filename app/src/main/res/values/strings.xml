@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">AGSR</string>
+    <string name="home_label">Home</string>
+    <string name="history_label">History</string>
+    <string name="profile_page">Profile</string>
+    <string name="fab_description">Add Goal</string>
+    <string name="steps">Steps</string>
+</resources>
