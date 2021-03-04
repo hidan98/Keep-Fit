@@ -5,4 +5,7 @@
     <string name="profile_page">Profile</string>
     <string name="fab_description">Add Goal</string>
     <string name="steps">Steps</string>
+    <string name="goal_name_hint">Goal Name</string>
+    <string name="done">Done</string>
+    <string name="discard">Discard</string>
 </resources>

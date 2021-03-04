@@ -8,14 +8,20 @@ import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.danDay.agsr.R
 import com.danDay.agsr.data.Goal
 import com.danDay.agsr.databinding.FragmentGoalsBinding
+import com.danDay.agsr.util.exhaustive
 import com.danDay.agsr.util.onQueryTextChanged
+import kotlinx.coroutines.flow.collect
+import com.google.android.material.snackbar.Snackbar
 
 
 import dagger.hilt.android.AndroidEntryPoint
@@ -39,8 +45,10 @@ class GoalsFragment : Fragment(R.layout.fragment_goals), GoalsAdapter.OnItemClic
                 adapter = goalsAdapter
                 layoutManager = LinearLayoutManager(requireContext())
             }
-            ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(0,
-            ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
+            ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(
+                0,
+                ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
+            ) {
                 override fun onMove(
                     recyclerView: RecyclerView,
                     viewHolder: RecyclerView.ViewHolder,
@@ -54,10 +62,44 @@ class GoalsFragment : Fragment(R.layout.fragment_goals), GoalsAdapter.OnItemClic
                     viewModel.onGoalSwipe(goal)
                 }
             }).attachToRecyclerView(recyclerViewGoals)
+
+            addTaskFab.setOnClickListener{
+                viewModel.onAddNewGoalClick()
+            }
         }
 
-        viewModel.goals.observe(viewLifecycleOwner){
+        setFragmentResultListener("add_edit_result"){_, bundle->
+            val result = bundle.getInt("add_edit_result")
+            viewModel.onAddEditResult(result)
+        }
+
+        viewModel.goals.observe(viewLifecycleOwner) {
             goalsAdapter.submitList(it)
+        }
+
+        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
+            viewModel.goalEvent.collect { event ->
+                when (event) {
+                    is GoalsViewModel.GoalEvent.ShowUndoDelete -> {
+                        Snackbar.make(requireView(), "Goal Deleted", Snackbar.LENGTH_LONG)
+                            .setAction("UNDO") {
+                                viewModel.onUndoDeleteClick(event.goal)
+                            }.show()
+                    }
+                    is GoalsViewModel.GoalEvent.NavigateAddGoal -> {
+                        val action = GoalsFragmentDirections.actionGoalsFragmentToAddEditGoalDialogeFragment()
+                        findNavController().navigate(action)
+                    }
+                    is GoalsViewModel.GoalEvent.NavigateEditGoal -> {
+                        val action = GoalsFragmentDirections.actionGoalsFragmentToAddEditGoalDialogeFragment(event.goal)
+                        findNavController().navigate(action)
+                    }
+                    is GoalsViewModel.GoalEvent.ShowGoalSavedConfirmation -> {
+                        Snackbar.make(requireView(), event.msg, Snackbar.LENGTH_SHORT).show()
+                    }
+                }.exhaustive
+
+            }
         }
 
         setHasOptionsMenu(true)
@@ -85,21 +127,22 @@ class GoalsFragment : Fragment(R.layout.fragment_goals), GoalsAdapter.OnItemClic
         }
         super.onCreateOptionsMenu(menu, inflater);
     }
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when(item.itemId){
-            R.id.sort_by_name->{
+        return when (item.itemId) {
+            R.id.sort_by_name -> {
                 viewModel.sortOrder.value = SortOrder.BY_NAME
                 true
             }
-            R.id.sort_by_favourites->{
+            R.id.sort_by_favourites -> {
                 viewModel.sortOrder.value = SortOrder.BY_FAVORITE
                 true
             }
-            R.id.sort_by_date->{
-                viewModel.sortOrder.value= SortOrder.BY_DATE
+            R.id.sort_by_date -> {
+                viewModel.sortOrder.value = SortOrder.BY_DATE
                 true
             }
-            else->super.onOptionsItemSelected(item)
+            else -> super.onOptionsItemSelected(item)
 
         }
     }

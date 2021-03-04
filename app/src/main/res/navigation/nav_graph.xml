@@ -23,5 +23,20 @@
         android:id="@+id/goalsFragment"
         android:name="com.danDay.agsr.ui.goals.GoalsFragment"
         android:label="fragment_goals"
-        tools:layout="@layout/fragment_goals" />
+        tools:layout="@layout/fragment_goals" >
+        <action
+            android:id="@+id/action_goalsFragment_to_addEditGoalDialogeFragment"
+            app:destination="@id/addEditGoalDialogeFragment" />
+    </fragment>
+    <dialog
+        android:id="@+id/addEditGoalDialogeFragment"
+        android:name="com.danDay.agsr.ui.addeditgoal.AddEditGoalDialogeFragment"
+        android:label="fragment_dialog_add_edit_goal"
+        tools:layout="@layout/fragment_dialog_add_edit_goal" >
+        <argument
+            android:name="goal"
+            app:argType="com.danDay.agsr.data.Goal"
+            app:nullable="true"
+            android:defaultValue="@null" />
+    </dialog>
 </navigation>
