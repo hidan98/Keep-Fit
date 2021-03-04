@@ -9,9 +9,11 @@ import android.view.ViewGroup
 import androidx.core.os.bundleOf
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResult
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import com.danDay.agsr.R
 import com.danDay.agsr.databinding.FragmentDialogAddEditGoalBinding
 import com.danDay.agsr.util.exhaustive
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
@@ -52,7 +54,7 @@ class AddEditGoalDialogeFragment : DialogFragment(){
             }
 
             discard.setOnClickListener{
-                dismiss()
+                viewModel.onClickDiscard()
             }
 
         }
@@ -71,7 +73,10 @@ class AddEditGoalDialogeFragment : DialogFragment(){
                         binding.goalNameEditText.clearFocus()
                         setFragmentResult(
                             "add_edit_request",
-                            bundleOf("add_edit_result" to event.result)
+                            Bundle().apply {
+                                putInt("add_edit_result", event.result)
+                            }
+                           // bundleOf("add_edit_result" to event.result)
                         )
                         dismiss()
                     }

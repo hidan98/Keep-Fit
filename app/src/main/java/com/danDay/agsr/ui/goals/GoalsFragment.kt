@@ -68,7 +68,8 @@ class GoalsFragment : Fragment(R.layout.fragment_goals), GoalsAdapter.OnItemClic
             }
         }
 
-        setFragmentResultListener("add_edit_result"){_, bundle->
+
+        setFragmentResultListener("add_edit_request"){_, bundle->
             val result = bundle.getInt("add_edit_result")
             viewModel.onAddEditResult(result)
         }

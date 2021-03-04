@@ -75,6 +75,9 @@ class AddEditGoalViewModel @Inject constructor(
         addEditTaskEventChannel.send(AddEditGoalEvent.ShowInvalidStepInput(text))
     }
 
+    fun onClickDiscard() {
+
+    }
 
 
     sealed class AddEditGoalEvent{

@@ -35,10 +35,6 @@ abstract class AppDatabase : RoomDatabase() {
                 goalDao.insert(Goal("D", 10))
                 goalDao.insert(Goal("E", 14353450))
 
-
-
-
-
             }
 
         }
