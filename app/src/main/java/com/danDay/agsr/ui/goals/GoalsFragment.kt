@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.danDay.agsr.R
 import com.danDay.agsr.data.Goal
+import com.danDay.agsr.data.SortOrder
 import com.danDay.agsr.databinding.FragmentGoalsBinding
 import com.danDay.agsr.util.exhaustive
 import com.danDay.agsr.util.onQueryTextChanged
@@ -26,6 +27,7 @@ import com.google.android.material.snackbar.Snackbar
 
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_goals.*
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class GoalsFragment : Fragment(R.layout.fragment_goals), GoalsAdapter.OnItemClickListener {
@@ -115,6 +117,10 @@ class GoalsFragment : Fragment(R.layout.fragment_goals), GoalsAdapter.OnItemClic
         viewModel.onFavoriteCheckedChanged(goal, isChecked)
     }
 
+    override fun onActiveClick(goal: Goal) {
+        viewModel.onActiveSelected(goal)
+    }
+
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         //super.onCreateOptionsMenu(menu, inflater)
 
@@ -126,21 +132,22 @@ class GoalsFragment : Fragment(R.layout.fragment_goals), GoalsAdapter.OnItemClic
         searchView.onQueryTextChanged {
             viewModel.searchQuery.value = it
         }
+
         super.onCreateOptionsMenu(menu, inflater);
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.sort_by_name -> {
-                viewModel.sortOrder.value = SortOrder.BY_NAME
+                viewModel.onSortOrderSelected(SortOrder.BY_NAME)
                 true
             }
             R.id.sort_by_favourites -> {
-                viewModel.sortOrder.value = SortOrder.BY_FAVORITE
+                viewModel.onSortOrderSelected(SortOrder.BY_FAVORITE)
                 true
             }
             R.id.sort_by_date -> {
-                viewModel.sortOrder.value = SortOrder.BY_DATE
+                viewModel.onSortOrderSelected(SortOrder.BY_DATE)
                 true
             }
             else -> super.onOptionsItemSelected(item)

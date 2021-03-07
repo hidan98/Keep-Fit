@@ -17,6 +17,7 @@ buildscript {
     ext.navigationVersion = "2.3.3"
     ext.roomVersion = "2.2.6"
     ext.testExtJunitVersion = "1.1.2"
+    dataStoreVersion = "1.0.0-alpha06"
     repositories {
         google()
         jcenter()

@@ -29,9 +29,6 @@ class AddEditGoalViewModel @Inject constructor(
             field = value
             state.set("goalSteps", value)
         }
-
-
-
     private val addEditTaskEventChannel = Channel<AddEditGoalEvent>()
     val addEditGoalEvent = addEditTaskEventChannel.receiveAsFlow()
 
@@ -55,8 +52,6 @@ class AddEditGoalViewModel @Inject constructor(
             createGoal(goalNew)
         }
     }
-
-
 
     private fun createGoal(goal: Goal)=viewModelScope.launch {
         goalDoe.insert(goal)
@@ -84,6 +79,7 @@ class AddEditGoalViewModel @Inject constructor(
         data class ShowInvalidStepInput(val message: String): AddEditGoalEvent()
         data class ShowInvalidNameInput(val message: String): AddEditGoalEvent()
         data class NavigateBackWithResult(val result: Int) : AddEditGoalEvent()
+
     }
 
 }

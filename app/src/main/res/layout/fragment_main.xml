@@ -4,80 +4,94 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center"
     android:orientation="vertical"
     tools:context=".ui.home.HomeFragment">
 
-
-
-
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal">
+        android:layout_height="wrap_content">
+        <include
+            layout="@layout/progress_layout"
+            android:id="@+id/progress"/>
 
-        <ProgressBar
-            android:id="@+id/activityCompletion"
-            android:layout_width="400dp"
-            android:layout_height="400dp"
-            style="@style/CircularDeterminateProgressBar"
-            android:indeterminateOnly="false"
-            android:progressDrawable="@drawable/circle"
-            app:layout_constraintBottom_toBottomOf="parent"
+        <TextView
+            android:id="@+id/steps_percent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toTopOf="@+id/steps_done"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="1.0"
-            tools:progress="50" />
+            app:layout_constraintVertical_bias="0.76"
+            tools:text="20000" />
 
-        <LinearLayout
-            android:layout_width="189dp"
+        <TextView
+            android:id="@+id/steps_done"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:orientation="vertical"
-            app:layout_constrainedWidth="true"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/activityCompletion"
-            app:layout_constraintTop_toTopOf="@+id/activityCompletion">
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/progress"
+            tools:text="10000" />
 
-
-            <TextView
-                android:id="@+id/textView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:ellipsize="end"
-                android:maxLines="1"
-                android:paddingHorizontal="30dp"
-
-                tools:text="Testt" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                tools:text="another" />
-        </LinearLayout>
-
-
+        <TextView
+            android:id="@+id/steps_goal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/steps_done"
+            app:layout_constraintVertical_bias="0.239"
+            tools:text="20000" />
 
 
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <TextView
-        android:layout_width="wrap_content"
+
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/step_input_layout"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        android:text="home Screen"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+        android:hint="@string/enter_steps"
+        android:layout_marginTop="16dp"
+        android:layout_marginHorizontal="16dp"
+        app:errorEnabled="true">
+
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/step_input_layout_edit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="number"
+            android:imeOptions="actionDone"/>
+    </com.google.android.material.textfield.TextInputLayout>
 
     <Button
-        android:id="@+id/TestButton"
+        android:id="@+id/AddButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Test" />
+        android:layout_gravity="center"
+        android:text="@string/add" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/dropDown_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu">
+
+        <AutoCompleteTextView
+            android:id="@+id/dropDown_TextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="none"
+            />
+    </com.google.android.material.textfield.TextInputLayout>
 
 
 

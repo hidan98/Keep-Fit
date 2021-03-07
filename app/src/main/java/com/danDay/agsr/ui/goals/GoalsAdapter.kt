@@ -42,6 +42,17 @@ class GoalsAdapter(private val listener: OnItemClickListener) :
                         listener.onFavouriteClick(goal, favouriteGoal.isChecked)
                     }
                 }
+
+                activeToggle.setOnClickListener {
+                    val position = adapterPosition
+                    if(position!= RecyclerView.NO_POSITION)
+                    {
+                        val goal = getItem(position)
+                        listener.onActiveClick(goal)
+                    }
+
+                }
+
             }
         }
 
@@ -50,6 +61,7 @@ class GoalsAdapter(private val listener: OnItemClickListener) :
                 goalName.text = goal.name
                 goalSteps.text = goal.steps.toString()
                 favouriteGoal.isChecked=goal.favourite
+                activeToggle.isChecked = goal.active
 
             }
         }
@@ -58,6 +70,7 @@ class GoalsAdapter(private val listener: OnItemClickListener) :
     interface OnItemClickListener {
         fun onItemClick(goal: Goal)
         fun onFavouriteClick(goal: Goal, isChecked: Boolean)
+        fun onActiveClick(goal:Goal)
     }
 
     class DiffCallback : DiffUtil.ItemCallback<Goal>() {

@@ -29,11 +29,12 @@ abstract class AppDatabase : RoomDatabase() {
 
             applicationScope.launch {
                 Log.d("myLog", "inserting")
-                goalDao.insert(Goal("A", 10000))
+                goalDao.insert(Goal("A", 10000, active = true))
                 goalDao.insert(Goal("B", 32))
                 goalDao.insert(Goal("C", 2354))
                 goalDao.insert(Goal("D", 10))
                 goalDao.insert(Goal("E", 14353450))
+                historyDoa.insert(History(current = true))
 
             }
 

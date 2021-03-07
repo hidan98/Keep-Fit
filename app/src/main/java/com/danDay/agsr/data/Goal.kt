@@ -13,9 +13,10 @@ data class Goal(
     val steps: Int,
     val favourite: Boolean = false,
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
-    val created: Long = System.currentTimeMillis()
+    val created: Long = System.currentTimeMillis(),
+    val active: Boolean = false
 ) : Parcelable{
 
     val createDateFormatted: String
-        get() = DateFormat.getDateInstance().format(created)
+        get() = DateFormat.getDateInstance(DateFormat.SHORT).format(created)
 }

@@ -8,4 +8,6 @@
     <string name="goal_name_hint">Goal Name</string>
     <string name="done">Done</string>
     <string name="discard">Discard</string>
+    <string name="enter_steps">Enter Steps</string>
+    <string name="add">Add</string>
 </resources>

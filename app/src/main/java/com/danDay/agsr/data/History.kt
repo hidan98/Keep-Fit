@@ -8,9 +8,10 @@ import java.text.DateFormat
 @Entity(tableName = "history_table")
 data class History(
     val time : Long = System.currentTimeMillis(),
-    val steps : Int,
-    @PrimaryKey(autoGenerate = true) val id: Int = 0
+    val steps : Long = 0,
+    @PrimaryKey(autoGenerate = true) val id: Int = 0,
+    val current: Boolean
 ) {
     val createDateFormat : String
-        get()=DateFormat.getDateInstance().format(time)
+        get()=DateFormat.getDateInstance(DateFormat.SHORT).format(time)
 }

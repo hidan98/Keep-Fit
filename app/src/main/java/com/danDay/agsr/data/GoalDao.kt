@@ -1,7 +1,7 @@
 package com.danDay.agsr.data
 
 import androidx.room.*
-import com.danDay.agsr.ui.goals.SortOrder
+
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -23,6 +23,18 @@ public interface GoalDao {
 
     @Query("SELECT * FROM goal_table WHERE name LIKE '%' ||  :searchQuery || '%' ORDER BY name DESC, favourite")
     fun getTaskSortedByFav(searchQuery: String): Flow<List<Goal>>
+
+    @Query("SELECT * FROM goal_table WHERE favourite=1")
+    fun getAllFavourite(): Flow<List<Goal>>
+
+    @Query("SELECT * FROM goal_table WHERE id= :goalId")
+    fun getGoalById(goalId : Int): Flow<Goal>
+
+    @Query("SELECT * FROM goal_table WHERE active = 1")
+    suspend fun getActive():Goal
+
+    @Query("SELECT * FROM goal_table WHERE active = 1")
+    fun getActiveFlow():Flow<Goal>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(goal: Goal)

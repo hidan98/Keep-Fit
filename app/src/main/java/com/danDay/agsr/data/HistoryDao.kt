@@ -10,6 +10,12 @@ public interface HistoryDao {
     @Query("SELECT * FROM history_table")
     fun getHistory() : Flow<List<History>>
 
+    @Query("SELECT * FROM history_table WHERE current = 1")
+    fun getCurrent(): Flow<History>
+
+    @Query("SELECT * FROM history_table order by id desc limit 1")
+    fun getLastHistory():Flow<History>
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(history :History)
 

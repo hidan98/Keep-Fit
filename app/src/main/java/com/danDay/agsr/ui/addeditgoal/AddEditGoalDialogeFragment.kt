@@ -9,20 +9,18 @@ import android.view.ViewGroup
 import androidx.core.os.bundleOf
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.DialogFragment
-import androidx.fragment.app.Fragment
+
 import androidx.fragment.app.setFragmentResult
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.danDay.agsr.R
 import com.danDay.agsr.databinding.FragmentDialogAddEditGoalBinding
 import com.danDay.agsr.util.exhaustive
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 
 @AndroidEntryPoint
-class AddEditGoalDialogeFragment : DialogFragment(){
+class AddEditGoalDialogeFragment : DialogFragment() {
 
     private val viewModel: AddEditGoalViewModel by viewModels()
 
@@ -49,19 +47,19 @@ class AddEditGoalDialogeFragment : DialogFragment(){
                 viewModel.goalStep = it.toString().toInt()
             }
 
-            done.setOnClickListener{
+            done.setOnClickListener {
                 viewModel.onSaveClick()
             }
 
-            discard.setOnClickListener{
+            discard.setOnClickListener {
                 viewModel.onClickDiscard()
             }
 
         }
 
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
-            viewModel.addEditGoalEvent.collect { event->
-                when (event){
+            viewModel.addEditGoalEvent.collect { event ->
+                when (event) {
                     is AddEditGoalViewModel.AddEditGoalEvent.ShowInvalidNameInput -> {
                         binding.goalNameEditText.error = event.message
                     }
@@ -76,7 +74,6 @@ class AddEditGoalDialogeFragment : DialogFragment(){
                             Bundle().apply {
                                 putInt("add_edit_result", event.result)
                             }
-                           // bundleOf("add_edit_result" to event.result)
                         )
                         dismiss()
                     }
