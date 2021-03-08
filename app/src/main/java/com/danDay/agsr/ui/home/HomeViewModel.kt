@@ -27,15 +27,16 @@ class HomeViewModel @Inject constructor(
     // lateinit var history: History
 
 
-
     val preferencesFlow = preferencesManager.preferencesFlow
 
     val history = historyDao.getLastHistory().asLiveData()
     var historyUsable: History = History(time = 0, current = false)
 
 
-    val goal = goalDao.getActiveFlow().asLiveData()
-    var goalUsable:Goal = Goal(active = false, name = "Error", steps = 0)
+    val activeGoal = goalDao.getActiveFlow().asLiveData()
+    val goalFavorite = goalDao.getAllFavourite().asLiveData()
+
+    var goalUsable: Goal = Goal(active = false, name = "Error", steps = 0)
 
     var historySteps = state.get<String>("steps") ?: ""
         set(value) {
@@ -43,7 +44,14 @@ class HomeViewModel @Inject constructor(
             state.set("steps", value)
         }
 
-    fun onAddStep() :Boolean {
+
+    var goal = state.get<Goal>("goal") ?: null
+        set(value) {
+            field = value
+            state.set("goal", value)
+        }
+
+    fun onAddStep(): Boolean {
 
 
         if (historySteps.isBlank()) {
@@ -70,7 +78,7 @@ class HomeViewModel @Inject constructor(
 
     fun checkHistory() = viewModelScope.launch {
 
-        if (history != null) {
+        if (historyUsable != null) {
             val sdf = SimpleDateFormat("MM/dd/yy")
 
             val dateString: String = historyUsable.createDateFormat
@@ -90,13 +98,14 @@ class HomeViewModel @Inject constructor(
     }
 
 
-
-
-
     fun updateHistory() = viewModelScope.launch {
         val oldHistory = historyUsable.copy()
 
-        val updatedHistory = historyUsable.copy(steps = historySteps.toLong() + historyUsable.steps)
+        val updatedHistory = historyUsable.copy(
+            steps = historySteps.toLong() + historyUsable.steps,
+            goalSteps = goalUsable.steps.toLong(),
+            goalName = goalUsable.name
+        )
 
         historyDao.update(updatedHistory)
         mainEventChannel.send(MainEvent.ShowUndoAdd(oldHistory))
@@ -115,6 +124,23 @@ class HomeViewModel @Inject constructor(
     fun onUndoDeleteClick(history: History) = viewModelScope.launch {
         historyDao.insert(history)
         mainEventChannel.send(MainEvent.UpdateProgressWheel(goalUsable, history))
+    }
+
+    fun changeActive(goal: Goal) = viewModelScope.launch {
+
+        if (goalUsable != null) {
+            if (goalUsable.id == goal.id) {
+                goalDao.update(goalUsable.copy(active = !goalUsable.active))
+                preferencesManager.updateGalID(0)
+            } else {
+                goalDao.update(goalUsable.copy(active = !goalUsable.active))
+                goalDao.update(goal.copy(active = !goal.active))
+                preferencesManager.updateGalID(goal.id)
+            }
+        } else {
+            goalDao.update(goal.copy(active = !goal.active))
+            preferencesManager.updateGalID(goal.id)
+        }
     }
 
     /*

@@ -63,6 +63,18 @@ class GoalsFragment : Fragment(R.layout.fragment_goals), GoalsAdapter.OnItemClic
                     val goal = goalsAdapter.currentList[viewHolder.adapterPosition]
                     viewModel.onGoalSwipe(goal)
                 }
+
+                override fun getMovementFlags(
+                    recyclerView: RecyclerView,
+                    viewHolder: RecyclerView.ViewHolder
+                ): Int {
+                    val goal = goalsAdapter.currentList[viewHolder.adapterPosition]
+                    if(goal.active)
+                    {
+                        return 0
+                    }
+                    return super.getMovementFlags(recyclerView, viewHolder)
+                }
             }).attachToRecyclerView(recyclerViewGoals)
 
             addTaskFab.setOnClickListener{
@@ -100,6 +112,9 @@ class GoalsFragment : Fragment(R.layout.fragment_goals), GoalsAdapter.OnItemClic
                     is GoalsViewModel.GoalEvent.ShowGoalSavedConfirmation -> {
                         Snackbar.make(requireView(), event.msg, Snackbar.LENGTH_SHORT).show()
                     }
+                    is GoalsViewModel.GoalEvent.ShowCantEditGoal -> {
+                        Snackbar.make(requireView(), event.msg, Snackbar.LENGTH_LONG).show()
+                    }
                 }.exhaustive
 
             }
@@ -133,7 +148,7 @@ class GoalsFragment : Fragment(R.layout.fragment_goals), GoalsAdapter.OnItemClic
             viewModel.searchQuery.value = it
         }
 
-        super.onCreateOptionsMenu(menu, inflater);
+        //super.onCreateOptionsMenu(menu, inflater);
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

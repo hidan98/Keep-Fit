@@ -17,6 +17,10 @@ data class Goal(
     val active: Boolean = false
 ) : Parcelable{
 
+    override fun toString(): String {
+        return ("Name: $name Steps: $steps")
+
+    }
     val createDateFormatted: String
         get() = DateFormat.getDateInstance(DateFormat.SHORT).format(created)
 }

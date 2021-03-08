@@ -13,7 +13,11 @@
         android:id="@+id/historyFragment"
         android:name="com.danDay.agsr.ui.history.HistoryFragment"
         android:label="fragment_history"
-        tools:layout="@layout/fragment_history" />
+        tools:layout="@layout/fragment_history">
+        <action
+            android:id="@+id/action_historyFragment_to_historyEditFragment"
+            app:destination="@id/historyEditFragment" />
+    </fragment>
     <fragment
         android:id="@+id/settingsFragment"
         android:name="com.danDay.agsr.ui.settings.SettingsFragment"
@@ -23,7 +27,7 @@
         android:id="@+id/goalsFragment"
         android:name="com.danDay.agsr.ui.goals.GoalsFragment"
         android:label="fragment_goals"
-        tools:layout="@layout/fragment_goals" >
+        tools:layout="@layout/fragment_goals">
         <action
             android:id="@+id/action_goalsFragment_to_addEditGoalDialogeFragment"
             app:destination="@id/addEditGoalDialogeFragment" />
@@ -32,11 +36,20 @@
         android:id="@+id/addEditGoalDialogeFragment"
         android:name="com.danDay.agsr.ui.addeditgoal.AddEditGoalDialogeFragment"
         android:label="fragment_dialog_add_edit_goal"
-        tools:layout="@layout/fragment_dialog_add_edit_goal" >
+        tools:layout="@layout/fragment_dialog_add_edit_goal">
         <argument
             android:name="goal"
+            android:defaultValue="@null"
             app:argType="com.danDay.agsr.data.Goal"
-            app:nullable="true"
-            android:defaultValue="@null" />
+            app:nullable="true" />
+    </dialog>
+    <dialog
+        android:id="@+id/historyEditFragment"
+        android:name="com.danDay.agsr.ui.history.historyEdit.HistoryEditFragment"
+        android:label="fragment_history_edit"
+        tools:layout="@layout/fragment_history_edit" >
+        <argument
+            android:name="history"
+            app:argType="com.danDay.agsr.data.History" />
     </dialog>
 </navigation>

@@ -45,7 +45,13 @@ class GoalsViewModel @Inject constructor(
 
 
     fun onGoalSelected(goal: Goal) = viewModelScope.launch {
-        goalEventChannel.send(GoalEvent.NavigateEditGoal(goal))
+        if(goal.active)
+        {
+            goalEventChannel.send(GoalEvent.ShowCantEditGoal("Cant edit active goal"))
+        }
+        else {
+            goalEventChannel.send(GoalEvent.NavigateEditGoal(goal))
+        }
     }
 
     fun onFavoriteCheckedChanged(goal: Goal, isChecked: Boolean) = viewModelScope.launch {
@@ -101,6 +107,7 @@ class GoalsViewModel @Inject constructor(
         data class NavigateEditGoal(val goal: Goal) : GoalEvent()
         data class ShowUndoDelete(val goal: Goal) : GoalEvent()
         data class ShowGoalSavedConfirmation(val msg: String) : GoalEvent()
+        data class ShowCantEditGoal(val msg: String):GoalEvent()
     }
 }
 

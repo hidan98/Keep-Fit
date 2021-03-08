@@ -5,17 +5,27 @@ package com.danDay.agsr.ui.home
 import android.os.Bundle
 import android.renderscript.ScriptGroup
 import android.util.Log
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
+import androidx.appcompat.widget.SearchView
 import androidx.core.math.MathUtils
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.ui.onNavDestinationSelected
 import com.danDay.agsr.R
+import com.danDay.agsr.data.SortOrder
 import com.danDay.agsr.databinding.FragmentMainBinding
 import com.danDay.agsr.ui.goals.GoalsViewModel
 import com.danDay.agsr.util.exhaustive
+import com.danDay.agsr.util.onQueryTextChanged
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_dialog_add_edit_goal.*
@@ -38,27 +48,33 @@ class HomeFragment : Fragment(R.layout.fragment_main) {
         val binding = FragmentMainBinding.bind(view)
 
 
-        //viewModel.getHistory()
-        //viewModel.getCurrentGoal()
-
-
         binding.apply {
 
             step_input_layout_edit.addTextChangedListener {
                 viewModel.historySteps = it.toString()
             }
             AddButton.setOnClickListener {
-                if (viewModel.onAddStep()) {
-                    stepInputLayoutEdit.setText("")
-
-                }
+                viewModel.onAddStep()
             }
+
+            viewModel.goalFavorite.observe(viewLifecycleOwner){
+                val adapter = ArrayAdapter(requireContext(), R.layout.list_item, it)
+                dropDownTextView.setAdapter(adapter)
+                dropDownTextView.setText(
+                    "Name: ${viewModel.goalUsable.name} Steps: ${viewModel.goalUsable.steps}",
+                    false
+                )
+                dropDownTextView.onItemClickListener =
+                    AdapterView.OnItemClickListener { parent, view, position, id -> //val goal =
+                        viewModel.changeActive(adapter.getItem(position)!!)
+                    }
+            }
+
 
         }
 
-        viewModel.goal.observe(viewLifecycleOwner) {
-            if(it!=null)
-            {
+        viewModel.activeGoal.observe(viewLifecycleOwner) {
+            if (it != null) {
                 viewModel.goalUsable = it
                 updateView(binding)
             }
@@ -66,15 +82,11 @@ class HomeFragment : Fragment(R.layout.fragment_main) {
         }
 
         viewModel.history.observe(viewLifecycleOwner) {
-            if(it!= null)
-            {
+            if (it != null) {
                 viewModel.historyUsable = it
                 updateView(binding)
             }
-
-
         }
-
 
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             viewModel.mainEvent.collect { event ->
@@ -84,8 +96,9 @@ class HomeFragment : Fragment(R.layout.fragment_main) {
                         binding.stepsGoal.text = event.goal.steps.toString()
                         var percent: Float =
                             ((event.history.steps.toFloat() / event.goal.steps.toFloat()) * 100.toFloat())
-                        percent = MathUtils.clamp(percent, 0.0f, 100.0f)
+
                         binding.stepsPercent.text = percent.toString()
+                        percent = MathUtils.clamp(percent, 0.0f, 100.0f)
                         binding.progress.activityCompletion.progress = percent.toInt()
                     }
                     is HomeViewModel.MainEvent.ShowInvalidStepInput -> {
@@ -96,6 +109,7 @@ class HomeFragment : Fragment(R.layout.fragment_main) {
                             .setAction("UNDO") {
                                 viewModel.onUndoDeleteClick(event.history)
                             }.show()
+                        binding.stepInputLayoutEdit.setText("")
                     }
                     is HomeViewModel.MainEvent.HistoryFound -> {
                         viewModel.checkHistory()
@@ -107,10 +121,6 @@ class HomeFragment : Fragment(R.layout.fragment_main) {
                 }.exhaustive
             }
         }
-
-        updateProgress()
-
-
     }
 
 
@@ -123,16 +133,17 @@ class HomeFragment : Fragment(R.layout.fragment_main) {
             if (viewModel.historyUsable.steps == 0.toLong() || viewModel.goalUsable.steps == 0) {
                 percent = 0.toFloat()
             } else {
-                percent =(((viewModel.historyUsable.steps.toFloat() / viewModel.goalUsable.steps.toFloat()) * 100.toFloat()))
+                percent =
+                    (((viewModel.historyUsable.steps.toFloat() / viewModel.goalUsable.steps.toFloat()) * 100.toFloat()))
             }
+
+            stepsPercent.text = percent.toString() + "%"
             percent = MathUtils.clamp(percent, 0.0f, 100.0f)
-            stepsPercent.text = percent.toString()
             progress.activityCompletion.progress = percent.toInt()
         }
     }
 
-    private fun updateProgress() {
 
 
-    }
+
 }

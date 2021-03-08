@@ -27,6 +27,9 @@ public interface GoalDao {
     @Query("SELECT * FROM goal_table WHERE favourite=1")
     fun getAllFavourite(): Flow<List<Goal>>
 
+    @Query("SELECT * FROM goal_table")
+    fun getAllGoals():Flow<List<Goal>>
+
     @Query("SELECT * FROM goal_table WHERE id= :goalId")
     fun getGoalById(goalId : Int): Flow<Goal>
 

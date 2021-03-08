@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -16,17 +17,37 @@
             android:layout_height="wrap_content"
             android:layout_margin="8dp">
 
-            <include
-                android:layout_width="64dp"
-                android:layout_height="64dp"
-                layout="@layout/progress_layout"
-                android:layout_alignParentEnd="true"/>
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:id="@+id/history_completion_layout">
+
+                <include
+                    android:id="@+id/history_progress"
+                    layout="@layout/progress_layout"
+                    android:layout_width="64dp"
+                    android:layout_height="64dp" />
+
+
+                <ImageView
+                    android:id="@+id/history_completion_img"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="@+id/history_progress"
+                    app:layout_constraintStart_toStartOf="@+id/history_progress"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:src="@drawable/ic_baseline_done_24" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_centerVertical="true">
+                android:layout_centerVertical="true"
+                android:orientation="horizontal">
 
 
                 <LinearLayout
@@ -38,50 +59,50 @@
                         android:id="@+id/history_goal_name"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        tools:text="Goal A"/>
+                        tools:text="Goal A" />
 
                     <TextView
                         android:id="@+id/history_date"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        tools:text="12/01/2021"
-                        />
+                        tools:text="12/01/2021" />
 
                 </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
                     android:orientation="vertical">
 
                     <TextView
                         android:id="@+id/history_steps"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        tools:text="Steps: 10000"
-                        android:layout_gravity="end"/>
+                        android:layout_gravity="end"
+                        tools:text="Steps: 10000" />
+
                     <TextView
+                        android:id="@+id/history_goal_steps"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        tools:text="Goal: 20000"
-                        android:layout_gravity="end"/>
+                        android:layout_gravity="end"
+                        tools:text="Goal: 20000" />
 
                 </LinearLayout>
 
             </LinearLayout>
 
-
-
-
-
-
             <TextView
-                android:id="@+id/history_id"
+                android:id="@+id/history_percent"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                tools:text="110%"
+                android:layout_centerVertical="true"
+                android:layout_toStartOf="@id/history_completion_layout"/>
+
 
         </RelativeLayout>
-
 
 
     </com.google.android.material.card.MaterialCardView>
