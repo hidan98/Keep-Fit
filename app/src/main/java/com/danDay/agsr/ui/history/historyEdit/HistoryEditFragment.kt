@@ -21,8 +21,10 @@ import com.danDay.agsr.databinding.FragmentHistoryEditBinding
 import com.danDay.agsr.util.exhaustive
 
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.android.synthetic.main.fragment_dialog_add_edit_goal.*
 import kotlinx.android.synthetic.main.fragment_history_edit.*
 import kotlinx.coroutines.flow.collect
+import java.util.*
 
 
 @AndroidEntryPoint
@@ -56,8 +58,9 @@ class HistoryEditFragment : DialogFragment() {
             historyEditDone.setOnClickListener {
                 viewModel.saveChanges()
             }
-
-
+            historyEditDiscard.setOnClickListener {
+                dismiss()
+            }
 
 
             viewModel.goals.observe(viewLifecycleOwner) {

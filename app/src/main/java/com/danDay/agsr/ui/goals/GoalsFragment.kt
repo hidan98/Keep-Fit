@@ -12,6 +12,7 @@ import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -41,6 +42,8 @@ class GoalsFragment : Fragment(R.layout.fragment_goals), GoalsAdapter.OnItemClic
         val binding = FragmentGoalsBinding.bind(view)
 
         val goalsAdapter = GoalsAdapter(this)
+        val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
+        viewModel.allowGoalEdit = sharedPreferences.getBoolean("Goal", true)
 
         binding.apply {
             recycler_view_goals.apply {
@@ -69,21 +72,21 @@ class GoalsFragment : Fragment(R.layout.fragment_goals), GoalsAdapter.OnItemClic
                     viewHolder: RecyclerView.ViewHolder
                 ): Int {
                     val goal = goalsAdapter.currentList[viewHolder.adapterPosition]
-                    if(goal.active)
-                    {
+                    if (goal.active) {
+                        Snackbar.make(requireView(), "Can't delete active goal!", Snackbar.LENGTH_SHORT).show()
                         return 0
                     }
                     return super.getMovementFlags(recyclerView, viewHolder)
                 }
             }).attachToRecyclerView(recyclerViewGoals)
 
-            addTaskFab.setOnClickListener{
+            addTaskFab.setOnClickListener {
                 viewModel.onAddNewGoalClick()
             }
         }
 
 
-        setFragmentResultListener("add_edit_request"){_, bundle->
+        setFragmentResultListener("add_edit_request") { _, bundle ->
             val result = bundle.getInt("add_edit_result")
             viewModel.onAddEditResult(result)
         }
@@ -102,11 +105,15 @@ class GoalsFragment : Fragment(R.layout.fragment_goals), GoalsAdapter.OnItemClic
                             }.show()
                     }
                     is GoalsViewModel.GoalEvent.NavigateAddGoal -> {
-                        val action = GoalsFragmentDirections.actionGoalsFragmentToAddEditGoalDialogeFragment()
+                        val action =
+                            GoalsFragmentDirections.actionGoalsFragmentToAddEditGoalDialogeFragment()
                         findNavController().navigate(action)
                     }
                     is GoalsViewModel.GoalEvent.NavigateEditGoal -> {
-                        val action = GoalsFragmentDirections.actionGoalsFragmentToAddEditGoalDialogeFragment(event.goal)
+                        val action =
+                            GoalsFragmentDirections.actionGoalsFragmentToAddEditGoalDialogeFragment(
+                                event.goal
+                            )
                         findNavController().navigate(action)
                     }
                     is GoalsViewModel.GoalEvent.ShowGoalSavedConfirmation -> {

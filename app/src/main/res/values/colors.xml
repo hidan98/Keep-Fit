@@ -8,4 +8,5 @@
     <color name="colorSecondaryDark">#769db1</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="mainBackground">#EDE7F8</color>
 </resources>

@@ -52,7 +52,14 @@ class AddEditGoalDialogeFragment : DialogFragment() {
             }
 
             discard.setOnClickListener {
-                viewModel.onClickDiscard()
+                dismiss()
+            }
+            addEditTitle.apply {
+                if(viewModel.goal!=null){
+                    text= "Edit Goal"
+                }
+                else
+                    text = "Create Goal"
             }
 
         }

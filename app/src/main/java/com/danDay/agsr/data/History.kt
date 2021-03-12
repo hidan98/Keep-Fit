@@ -10,7 +10,7 @@ import java.text.DateFormat
 @Entity(tableName = "history_table")
 @Parcelize
 data class History(
-    val time : Long = System.currentTimeMillis(),
+    val time : Long,
     val steps : Long = 0,
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
     val current: Boolean,

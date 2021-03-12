@@ -24,7 +24,7 @@ public interface GoalDao {
     @Query("SELECT * FROM goal_table WHERE name LIKE '%' ||  :searchQuery || '%' ORDER BY name DESC, favourite")
     fun getTaskSortedByFav(searchQuery: String): Flow<List<Goal>>
 
-    @Query("SELECT * FROM goal_table WHERE favourite=1")
+    @Query("SELECT * FROM goal_table WHERE favourite=1 OR active =1")
     fun getAllFavourite(): Flow<List<Goal>>
 
     @Query("SELECT * FROM goal_table")

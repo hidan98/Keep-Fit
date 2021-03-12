@@ -2,11 +2,8 @@ package com.danDay.agsr.data
 
 import android.content.Context
 import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.edit
-import androidx.datastore.preferences.core.emptyPreferences
+import androidx.datastore.preferences.core.*
 import androidx.datastore.preferences.createDataStore
-import androidx.datastore.preferences.core.intPreferencesKey
-import androidx.datastore.preferences.core.stringPreferencesKey
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
@@ -19,7 +16,7 @@ import javax.inject.Singleton
 enum class SortOrder { BY_NAME, BY_FAVORITE, BY_DATE }
 
 
-data class FilterPreferences(val sortOrder: SortOrder, val goalId: Int, val historyId: Int)
+data class FilterPreferences(val sortOrder: SortOrder, val goalId: Int, val historyId: Int, val stepStore :Long)
 
 @Singleton
 class PreferencesManager @Inject constructor(@ApplicationContext context: Context) {
@@ -39,7 +36,8 @@ class PreferencesManager @Inject constructor(@ApplicationContext context: Contex
             )
             val goalId = preferences[PreferencesKeys.GOAL_ID]?:1
             val historyId = preferences[PreferencesKeys.HISTORY_ID]?:1
-            FilterPreferences(sortOrder, goalId, historyId)
+            val step = preferences[PreferencesKeys.StepStore]?:0
+            FilterPreferences(sortOrder, goalId, historyId, step)
 
         }
 
@@ -60,12 +58,19 @@ class PreferencesManager @Inject constructor(@ApplicationContext context: Contex
             prefernces[PreferencesKeys.HISTORY_ID] = id
         }
     }
+    suspend fun updateStepCheck(steps:Long){
+        dataStore.edit {prefernces->
+            prefernces[PreferencesKeys.StepStore]=steps
+        }
+    }
 
 
     private object PreferencesKeys {
         val SORT_ORDER = stringPreferencesKey("sort_order")
         val GOAL_ID = intPreferencesKey("goal_key")
         val HISTORY_ID = intPreferencesKey("history_key")
+        val StepStore = longPreferencesKey("StepStore_key")
+
     }
 
 

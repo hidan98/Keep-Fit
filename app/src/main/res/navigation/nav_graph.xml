@@ -7,16 +7,19 @@
     <fragment
         android:id="@+id/homeFragment"
         android:name="com.danDay.agsr.ui.home.HomeFragment"
-        android:label="fragment_main"
+        android:label="Home"
         tools:layout="@layout/fragment_main" />
     <fragment
         android:id="@+id/historyFragment"
         android:name="com.danDay.agsr.ui.history.HistoryFragment"
-        android:label="fragment_history"
+        android:label="History"
         tools:layout="@layout/fragment_history">
         <action
             android:id="@+id/action_historyFragment_to_historyEditFragment"
             app:destination="@id/historyEditFragment" />
+        <action
+            android:id="@+id/action_historyFragment_to_datePicker"
+            app:destination="@id/datePicker" />
     </fragment>
     <fragment
         android:id="@+id/settingsFragment"
@@ -26,7 +29,7 @@
     <fragment
         android:id="@+id/goalsFragment"
         android:name="com.danDay.agsr.ui.goals.GoalsFragment"
-        android:label="fragment_goals"
+        android:label="Goals"
         tools:layout="@layout/fragment_goals">
         <action
             android:id="@+id/action_goalsFragment_to_addEditGoalDialogeFragment"
@@ -52,4 +55,8 @@
             android:name="history"
             app:argType="com.danDay.agsr.data.History" />
     </dialog>
+    <dialog
+        android:id="@+id/datePicker"
+        android:name="com.danDay.agsr.ui.history.historyEdit.DatePicker"
+        android:label="DatePicker" />
 </navigation>

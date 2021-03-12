@@ -34,7 +34,16 @@ abstract class AppDatabase : RoomDatabase() {
                 goalDao.insert(Goal("C", 2354))
                 goalDao.insert(Goal("D", 10))
                 goalDao.insert(Goal("E", 14353450))
-                historyDoa.insert(History(current = true))
+                /*
+                historyDoa.insert(History(steps = 0, goalSteps =  222, current = false))
+                historyDoa.insert(History(steps = 999, goalSteps =  4324, current = false))
+                historyDoa.insert(History(steps = 4857, goalSteps =  222, current = false))
+                historyDoa.insert(History(steps = 10000, goalSteps =  123, current = false))
+                historyDoa.insert(History(steps = 232, goalSteps =  999, current = false))
+                historyDoa.insert(History(steps = 3456, goalSteps =  1235, current = false))
+
+                 */
+                historyDoa.insert(History(current = true, time = System.currentTimeMillis()))
 
             }
 

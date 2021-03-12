@@ -55,7 +55,7 @@ class HistoryAdapter(private val listener: HistoryAdapter.OnItemClickListener) :
                     percent = 0.toFloat()
                 } else {
                     percent =
-                        (((history.steps.toFloat() / history.goalSteps.toFloat()) * 100.toFloat()))
+                        ((history.steps.toFloat() / history.goalSteps.toFloat()) * 100.toFloat())
                 }
 
                 if (percent >= 100F) {
@@ -65,7 +65,8 @@ class HistoryAdapter(private val listener: HistoryAdapter.OnItemClickListener) :
                 }
                 historyPercent.text = percent.toString() + "%"
                 percent = MathUtils.clamp(percent, 0.0f, 100.0f)
-                historyProgress.activityCompletion.progress = percent.toInt()
+                val final = percent.toInt()
+                progressHistory.progress = final
 
             }
         }

@@ -42,9 +42,15 @@ class HistoryEditViewModel @Inject constructor(
             state.set("goal", value)
         }
 
+    var time = state.get<Long>("time") ?: 0
+        set(value) {
+            field = value
+            state.set("time", value)
+        }
+
     fun saveChanges() {
-        if(historyAddStep.isBlank()){
-            historyAddStep="0"
+        if (historyAddStep.isBlank()) {
+            historyAddStep = "0"
         }
 
         if (history != null) {
@@ -56,9 +62,17 @@ class HistoryEditViewModel @Inject constructor(
             updateHistory(updatedHistory)
 
 
+        } else {
+            val history = History(current = false, steps = historyAddStep.toLong(), time =time)
+            createHistory(history)
         }
 
 
+    }
+
+    private fun createHistory(history: History)= viewModelScope.launch {
+        historyDao.insert(history)
+        historyEditEventChannel.send(HistoryEditEvent.NavigateBackWithResult(ADD_TASK_RESULT_OK))
     }
 
 

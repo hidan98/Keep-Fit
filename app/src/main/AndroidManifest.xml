@@ -2,6 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.danDay.agsr">
 
+    <uses-permission android:name="android.permission.ACTIVITY_RECOGNITION" />
     <application
         android:name=".AGSRApplication"
         android:allowBackup="false"
@@ -21,6 +22,11 @@
             </intent-filter>
 
         </activity>
+
+        <service
+            android:name=".stepJobService"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
+
 
 
     </application>

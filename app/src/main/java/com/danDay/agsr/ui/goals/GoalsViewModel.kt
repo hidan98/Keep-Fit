@@ -1,15 +1,19 @@
 package com.danDay.agsr.ui.goals
 
+import android.content.SharedPreferences
 import android.util.Log
 import androidx.lifecycle.*
+import androidx.preference.PreferenceManager
 import com.danDay.agsr.data.Goal
 import com.danDay.agsr.data.GoalDao
 import com.danDay.agsr.data.PreferencesManager
 import com.danDay.agsr.data.SortOrder
 import com.danDay.agsr.ui.addeditgoal.ADD_TASK_RESULT_OK
 import com.danDay.agsr.ui.addeditgoal.EDIT_TASK_RESULT_OK
-import dagger.assisted.Assisted
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
+
+
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
@@ -19,7 +23,8 @@ import javax.inject.Inject
 class GoalsViewModel @Inject constructor(
     private val goalsDao: GoalDao,
     private val state: SavedStateHandle,
-    private val preferencesManager: PreferencesManager
+    private val preferencesManager: PreferencesManager,
+
 ) : ViewModel() {
     val searchQuery = state.getLiveData("searchQuery", "")
 
@@ -27,6 +32,9 @@ class GoalsViewModel @Inject constructor(
     val goalEvent = goalEventChannel.receiveAsFlow()
 
     val preferencesFlow = preferencesManager.preferencesFlow
+
+    var allowGoalEdit: Boolean = false
+
 
     private val goalFlow = combine(
         searchQuery.asFlow(),
@@ -45,13 +53,15 @@ class GoalsViewModel @Inject constructor(
 
 
     fun onGoalSelected(goal: Goal) = viewModelScope.launch {
-        if(goal.active)
-        {
-            goalEventChannel.send(GoalEvent.ShowCantEditGoal("Cant edit active goal"))
+        if (allowGoalEdit) {
+            if (goal.active) {
+                goalEventChannel.send(GoalEvent.ShowCantEditGoal("Cant edit active goal"))
+            } else {
+                goalEventChannel.send(GoalEvent.NavigateEditGoal(goal))
+            }
         }
-        else {
-            goalEventChannel.send(GoalEvent.NavigateEditGoal(goal))
-        }
+        else
+            goalEventChannel.send((GoalEvent.ShowCantEditGoal("Cant edit goals, please change in settings")))
     }
 
     fun onFavoriteCheckedChanged(goal: Goal, isChecked: Boolean) = viewModelScope.launch {

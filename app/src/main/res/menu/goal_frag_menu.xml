@@ -12,7 +12,8 @@
     <item
         android:icon="@drawable/ic_baseline_sort_24"
         android:title="Sort"
-        app:showAsAction="ifRoom">
+        app:showAsAction="ifRoom"
+        android:id="@+id/topBar_sort">
         <menu>
             <item
                 android:id="@+id/sort_by_name"

@@ -28,16 +28,16 @@ class GoalsAdapter(private val listener: OnItemClickListener) :
 
         init {
             binding.apply {
-                root.setOnClickListener{
+                root.setOnClickListener {
                     val position = adapterPosition
-                    if(position!=RecyclerView.NO_POSITION){
+                    if (position != RecyclerView.NO_POSITION) {
                         val goal = getItem(position)
                         listener.onItemClick(goal)
                     }
                 }
-                favouriteGoal.setOnClickListener{
+                favouriteGoal.setOnClickListener {
                     val position = adapterPosition
-                    if(position != RecyclerView.NO_POSITION){
+                    if (position != RecyclerView.NO_POSITION) {
                         val goal = getItem(position)
                         listener.onFavouriteClick(goal, favouriteGoal.isChecked)
                     }
@@ -45,14 +45,11 @@ class GoalsAdapter(private val listener: OnItemClickListener) :
 
                 activeToggle.setOnClickListener {
                     val position = adapterPosition
-                    if(position!= RecyclerView.NO_POSITION)
-                    {
+                    if (position != RecyclerView.NO_POSITION) {
                         val goal = getItem(position)
                         listener.onActiveClick(goal)
                     }
-
                 }
-
             }
         }
 
@@ -60,7 +57,7 @@ class GoalsAdapter(private val listener: OnItemClickListener) :
             binding.apply {
                 goalName.text = goal.name
                 goalSteps.text = goal.steps.toString()
-                favouriteGoal.isChecked=goal.favourite
+                favouriteGoal.isChecked = goal.favourite
                 activeToggle.isChecked = goal.active
 
             }
@@ -70,7 +67,7 @@ class GoalsAdapter(private val listener: OnItemClickListener) :
     interface OnItemClickListener {
         fun onItemClick(goal: Goal)
         fun onFavouriteClick(goal: Goal, isChecked: Boolean)
-        fun onActiveClick(goal:Goal)
+        fun onActiveClick(goal: Goal)
     }
 
     class DiffCallback : DiffUtil.ItemCallback<Goal>() {

@@ -1,9 +1,14 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
     <style name="Theme.AGSR" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+
+        <item name="bottomNavigationStyle">
+            @style/Widget.MaterialComponents.BottomNavigationView.Colored
+        </item>
+
         <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryVariant">@color/colorPrimaryLight</item>
+        <item name="colorPrimary">@color/colorPrimaryLight</item>
+        <item name="colorPrimaryVariant">@color/colorPrimary</item>
         <item name="colorOnPrimary">@color/white</item>
 
         <!-- Secondary brand color. -->
@@ -14,11 +19,22 @@
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
 
-        <item name="bottomNavigationStyle">@style/Widget.MaterialComponents.BottomNavigationView.Colored</item>
+
+        <item name="android:colorBackground">@color/mainBackground</item>
+        <item name="materialButtonStyle">@style/PrimaryColoredButton</item>
+
+
     </style>
-    
+
+    <style name="PrimaryColoredButton" parent="Widget.MaterialComponents.Button">
+        <item name="backgroundTint">@color/colorSecondary</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
+
+
     <style name="Widget.App.CardView" parent="Widget.MaterialComponents.CardView">
         <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="cardBackgroundColor">@color/colorPrimary</item>
     </style>
 
     <style name="CircularDeterminateProgressBar">
