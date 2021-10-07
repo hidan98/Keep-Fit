@@ -144,8 +144,6 @@ class GoalsFragment : Fragment(R.layout.fragment_goals), GoalsAdapter.OnItemClic
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        //super.onCreateOptionsMenu(menu, inflater)
-
         inflater.inflate(R.menu.goal_frag_menu, menu)
 
         val searchItem = menu.findItem(R.id.search)
@@ -155,7 +153,7 @@ class GoalsFragment : Fragment(R.layout.fragment_goals), GoalsAdapter.OnItemClic
             viewModel.searchQuery.value = it
         }
 
-        //super.onCreateOptionsMenu(menu, inflater);
+
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

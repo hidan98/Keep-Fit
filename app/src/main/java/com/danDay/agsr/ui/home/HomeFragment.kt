@@ -33,9 +33,11 @@ import kotlinx.android.synthetic.main.fragment_dialog_add_edit_goal.*
 import kotlinx.android.synthetic.main.fragment_main.*
 import kotlinx.coroutines.flow.collect
 
+//app home fragment
 @AndroidEntryPoint
 class HomeFragment : Fragment(R.layout.fragment_main), SensorEventListener {
 
+    // variable setup
     private val viewModel: HomeViewModel by viewModels()
     private var dayChanged: Boolean = false
     private lateinit var sensorManager: SensorManager
@@ -57,7 +59,7 @@ class HomeFragment : Fragment(R.layout.fragment_main), SensorEventListener {
                 viewModel.historySteps = it.toString()
             }
             stepInputLayoutEdit.setOnEditorActionListener { v, actionId, event ->
-                var handled = false
+
                 if(actionId == EditorInfo.IME_ACTION_DONE){
                     viewModel.onAddStep()
                     val imm: InputMethodManager =
@@ -69,6 +71,7 @@ class HomeFragment : Fragment(R.layout.fragment_main), SensorEventListener {
                     false
 
             }
+
             AddButton.setOnClickListener {
                 viewModel.onAddStep()
             }
@@ -103,7 +106,7 @@ class HomeFragment : Fragment(R.layout.fragment_main), SensorEventListener {
 
          */
 
-
+        //monitors change to goal selection in home page
         viewModel.activeGoal.observe(viewLifecycleOwner) {
             if (it != null) {
                 viewModel.goalUsable = it
@@ -112,8 +115,9 @@ class HomeFragment : Fragment(R.layout.fragment_main), SensorEventListener {
             }
         }
 
-
+        //monitors change in the input field
         viewModel.history.observe(viewLifecycleOwner) {
+            //if a current history exhists procede to update
             if (it != null) {
                 viewModel.historyUsable = it
                 if (dayChanged) {
@@ -121,12 +125,14 @@ class HomeFragment : Fragment(R.layout.fragment_main), SensorEventListener {
                     dayChanged = false
                 }
                 updateView(binding)
+                //if no current history detected set up new
             } else {
                 viewModel.historyUsable = History(time = 0L, current = false)
                 updateView(binding)
             }
         }
 
+        //monitors events called from the home view model and updates ui based on data or calles other functions in the view model
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             viewModel.mainEvent.collect { event ->
                 when (event) {
@@ -170,6 +176,7 @@ class HomeFragment : Fragment(R.layout.fragment_main), SensorEventListener {
     }
 
 
+    //updates the daily progress wheel and text within
     private fun updateView(binding: FragmentMainBinding) {
 
         binding.apply {
@@ -190,6 +197,8 @@ class HomeFragment : Fragment(R.layout.fragment_main), SensorEventListener {
     }
 
 
+    //the following functions are prodomenantly used for the step counter sensor.
+    //Idealy this should be located in a job schedular as this will only work when this fragment is open
     override fun onResume() {
         super.onResume()
         val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)

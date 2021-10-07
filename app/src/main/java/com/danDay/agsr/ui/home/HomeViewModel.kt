@@ -63,7 +63,7 @@ class HomeViewModel @Inject constructor(
     fun onAddStep(): Boolean {
 
         if (historySteps.isBlank()) {
-            showInvalidNameInputMessage("Name cannot be blank")
+            showInvalidStepsInputMessage("Invalid step input")
             return false
         }
         stepStore = historySteps.toLong()
@@ -81,16 +81,21 @@ class HomeViewModel @Inject constructor(
         mainEventChannel.send(MainEvent.HistoryFound)
     }
 
+    // checks the current date and compares it to that of the last history input. If the current date
+    //is newer than that of the stored one, a new history instance will be created. if not history will be updated
     fun checkHistory() = viewModelScope.launch {
 
         if (historyUsable != null) {
             val sdf = SimpleDateFormat("MM/dd/yy")
 
+            //get saved date and current date
             val dateString: String = historyUsable.createDateFormat
             val date: Date = sdf.parse(dateString)
             val dateNow =
                 DateFormat.getDateInstance(DateFormat.SHORT).format(System.currentTimeMillis())
             val dateNowParsed: Date = sdf.parse(dateNow)
+
+            //check if the current date is after saved, if so create new else return that check is complete
             if (dateNowParsed.after(date)) {
 
                 historyDao.insert(History(current = true, time = System.currentTimeMillis()))
@@ -108,7 +113,7 @@ class HomeViewModel @Inject constructor(
 
     }
 
-
+    //update steps in histiry and trigger events
     fun updateHistory(step:Long) = viewModelScope.launch {
         val oldHistory = historyUsable.copy()
 
@@ -124,7 +129,7 @@ class HomeViewModel @Inject constructor(
     }
 
 
-    private fun showInvalidNameInputMessage(text: String) = viewModelScope.launch {
+    private fun showInvalidStepsInputMessage(text: String) = viewModelScope.launch {
         mainEventChannel.send(MainEvent.ShowInvalidStepInput(text))
     }
 
@@ -140,7 +145,9 @@ class HomeViewModel @Inject constructor(
     fun changeActive(goal: Goal) = viewModelScope.launch {
 
         if (goalUsable != null) {
+            //if
             if (goalUsable.id == goal.id) {
+
                 goalDao.update(goalUsable.copy(active = !goalUsable.active))
                 historyDao.update(
                     historyUsable.copy(
@@ -149,6 +156,8 @@ class HomeViewModel @Inject constructor(
                     )
                 )
                 preferencesManager.updateGalID(0)
+
+
 
             } else {
                 goalDao.update(goalUsable.copy(active = !goalUsable.active))
@@ -174,6 +183,7 @@ class HomeViewModel @Inject constructor(
     }
 
 
+
     sealed class MainEvent {
         data class ShowInvalidStepInput(val message: String) : MainEvent()
         data class UpdateProgressWheel(val goal: Goal, val history: History) : MainEvent()
@@ -183,69 +193,6 @@ class HomeViewModel @Inject constructor(
         object DateChanged : MainEvent()
     }
 
-    /*
 
-    inner class LiveDataSensor() : LiveData<Long>(), SensorEventListener {
-        private var stepsSend =0
-        private var stepsLastSent =0
-        private val sensorManager
-            get() = getApplication<Application>().getSystemService(Context.SENSOR_SERVICE) as SensorManager
-
-        override fun onSensorChanged(event: SensorEvent?) {
-
-
-            val totalStepSinceReboot: Int = event?.values?.get(0)?.toInt() ?: 0
-
-            val sdf = SimpleDateFormat("MM/dd/yy")
-            if (sdf.parse(event?.timestamp.toString()).after(sdf.parse(historyUsable.createDateFormat))){
-
-                updateStepStore(totalStepSinceReboot.toLong())
-            }
-            else{
-                stepsSend = totalStepSinceReboot - stepsLastSent
-            }
-
-
-            if (event != null) {
-                postValue(event.timestamp)
-            }
-
-            stepsLastSent = stepsSend
-
-
-
-
-        }
-        private fun updateStepStore(step:Long)=viewModelScope.launch {
-            preferencesManager.updateStepCheck(step)
-        }
-
-        override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {
-            TODO("Not yet implemented")
-        }
-
-        override fun onActive() {
-            var stepsSensor = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR)
-
-            if (stepsSensor != null) {
-                sensorManager.registerListener(this, stepsSensor, SensorManager.SENSOR_DELAY_NORMAL)
-            }
-        }
-
-
-        override fun onInactive() {
-            sensorManager.unregisterListener(this)
-        }
-        fun turnOff() {
-            sensorManager.unregisterListener(this)
-        }
-
-        fun getStep():Int{
-            return stepsSend
-        }
-
-    }
-
-     */
 
 }

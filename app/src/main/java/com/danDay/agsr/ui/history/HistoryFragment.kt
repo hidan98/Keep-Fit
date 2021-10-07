@@ -74,7 +74,9 @@ class HistoryFragment : Fragment(R.layout.fragment_history), HistoryAdapter.OnIt
         }
 
         viewModel.historyLast.observe(viewLifecycleOwner) {
-            viewModel.historyLastIncert = it
+            if(it!=null) {
+                viewModel.historyLastIncert = it
+            }
         }
 
         viewModel.historyCurrent.observe(viewLifecycleOwner){
